@@ -1,0 +1,6 @@
+c:\users\lkerr\documents\visual studio 2015\Projects\ro-sham-bo\ro-sham-bo\bin\Debug\ro-sham-bo.exe.config
+c:\users\lkerr\documents\visual studio 2015\Projects\ro-sham-bo\ro-sham-bo\bin\Debug\ro-sham-bo.exe
+c:\users\lkerr\documents\visual studio 2015\Projects\ro-sham-bo\ro-sham-bo\bin\Debug\ro-sham-bo.pdb
+c:\users\lkerr\documents\visual studio 2015\Projects\ro-sham-bo\ro-sham-bo\obj\Debug\ro-sham-bo.csprojResolveAssemblyReference.cache
+c:\users\lkerr\documents\visual studio 2015\Projects\ro-sham-bo\ro-sham-bo\obj\Debug\ro-sham-bo.exe
+c:\users\lkerr\documents\visual studio 2015\Projects\ro-sham-bo\ro-sham-bo\obj\Debug\ro-sham-bo.pdb
