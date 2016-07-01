@@ -13,87 +13,83 @@ namespace RoShamBo
             Random rand = new Random();
             Console.WriteLine("Enter (R)ock (P)aper (S)cissors or (Q)uit");
             char player = Console.ReadLine()[0];
+            string PlayerString = "";
             player = Char.ToLower(player);
+            switch (player) {
+                case 'r':
+                    PlayerString = "Rock";
+                    Console.WriteLine("Rock");                    
+                    break;
+                case 'p':
+                    PlayerString = "Paper";
+                    break;
+                case 's':
+                    PlayerString = "Scissors";
+                    break;
+                case 'q':
+                    break;
+                default:
+                    throw new ArgumentException("Invalid input: " + player);
+                    break;
 
-            if (player != 'r' && player != 'p' && player != 's' && player != 'q')
-            {
-                Console.WriteLine("Invalid Input: " + player);
-                Environment.Exit(0);
             }
 
             while (player != 'q')
             {
                 int ai = rand.Next();
                 ai = ai % 3;
-                char comp;
-
-                if (ai == 0)
-                {
-                    comp = 'r';
-                }
-                else if (ai == 1)
-                {
-                    comp = 'p';
-                }
-                else
-                {
-                    comp = 's';
-                }
-
-                if (player == 'r')
-                {
-                    if (comp == 'r')
-                    {
-                        Console.WriteLine("Tie: Rock & Rock");
-                    }
-                    else if (comp == 'p')
-                    {
-                        Console.WriteLine("Lose: Rock & Paper");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Win: Rock & Scissors");
-                    }
+                String comp;
+                switch (ai) {
+                    case 0:
+                        comp = "Rock";
+                        break;
+                    case 1:
+                        comp = "Paper";
+                        break;
+                    case 2:
+                        comp = "Scissors";
+                        break;
+                    default:
+                        comp = "Rock";
+                        break;
                 }
 
-                if (player == 'p')
-                {
-                    if (comp == 'r')
-                    {
-                        Console.WriteLine("Win: Paper & Rock");
+                if (PlayerString.Equals(comp)) {
+                    Console.WriteLine(String.Format("Tie: {0} and {1}", PlayerString, comp));          
+                } else {
+                    string both = PlayerString + comp;
+                    string output = "";
+                    switch (both) {
+                        case "RockScissors":
+                        case "PaperRock":
+                        case "ScissorsPaper":
+                            output = String.Format("You win: {0} beats {1}", PlayerString, comp);
+                            break;
+                        default:
+                            output = String.Format("CPU wins: {0} beats {1}", comp, PlayerString);
+                            break;
                     }
-                    else if (comp == 'p')
-                    {
-                        Console.WriteLine("Tie: Paper & Paper");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Lose: Paper & Scissors");
-                    }
-                }
-
-                if (player == 's')
-                {
-                    if (comp == 'r')
-                    {
-                        Console.WriteLine("Lose: Scissors & Rock");
-                    }
-                    else if (comp == 'p')
-                    {
-                        Console.WriteLine("Win: Scissors & Paper");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Tie: Scissors & Scissors");
-                    }
+                    Console.WriteLine(output);
                 }
 
                 player = Console.ReadLine()[0];
                 player = Char.ToLower(player);
-                if (player != 'r' && player != 'p' && player != 's' && player != 'q')
-                {
-                    Console.WriteLine("Invalid Input: " + player);
-                    Environment.Exit(0);
+                switch (player) {
+                    case 'r':
+                        PlayerString = "Rock";
+                        break;
+                    case 'p':
+                        PlayerString = "Paper";
+                        break;
+                    case 's':
+                        PlayerString = "Scissors";
+                        break;
+                    case 'q':
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid input: " + player);
+                        break;
+
                 }
             }
 
