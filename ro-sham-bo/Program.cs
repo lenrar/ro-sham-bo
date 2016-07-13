@@ -76,6 +76,7 @@ namespace RoShamBo
             ConsoleKey player = ConsoleKey.NoName;
             string PlayerString = "";
             while (player != ConsoleKey.B) {
+                Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Clear();
                 Console.WriteLine("Enter (R)ock (P)aper (S)cissors or (B)ack");
                 player = Console.ReadKey().Key;
@@ -93,7 +94,10 @@ namespace RoShamBo
                     case ConsoleKey.B:
                         return; 
                     default:
-                        throw new ArgumentException("Invalid input: " + player);
+                        Console.WriteLine("Invalid character, press any key to continue");
+                        Console.ReadKey();
+                        continue;
+                        // throw new ArgumentException("Invalid input: " + player);
                 }
                 int ai = rand.Next();
                 ai = ai % 3;
@@ -114,6 +118,7 @@ namespace RoShamBo
                 }
                 string output = "";
                 if (PlayerString.Equals(comp)) {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     output = String.Format("Tie: {0} and {1}", PlayerString, comp);
                     ties++;
                 } else {
@@ -123,10 +128,12 @@ namespace RoShamBo
                         case "RockScissors":
                         case "PaperRock":
                         case "ScissorsPaper":
+                            Console.ForegroundColor = ConsoleColor.Green;
                             output = String.Format("You win: {0} beats {1}", PlayerString, comp);
                             playerWins++;
                             break;
                         default:
+                            Console.ForegroundColor = ConsoleColor.Red;
                             output = String.Format("CPU wins: {0} beats {1}", comp, PlayerString);
                             cpuWins++;
                             break;
