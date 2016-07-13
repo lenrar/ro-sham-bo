@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace RoShamBo
 {
     class Program
@@ -13,6 +14,7 @@ namespace RoShamBo
         static double ties = 0;
         static void Main(string[] args)
         {
+
             Console.WriteLine("Welcome to Ro-Sham-Bo");
             /*Console.WriteLine("______            _____ _                          ______");
             Console.WriteLine("| ___ \\          / ___ | |                         | ___ \\      ");
@@ -20,8 +22,12 @@ namespace RoShamBo
             Console.WriteLine("|    // _ \\______|`--. \\ '_ \\ / _` | '_ ` _ \\______| ___ \\/ _ \\ ");
             Console.WriteLine("| |\\ \\ (_) |     /\\__ / / | | | (_ | | | | | | |     | | _ / / (_) |");
             Console.WriteLine("\\_ | \\_\\___ /      \\____ /| _ | | _ |\\__, _ | _ | | _ | | _ |     \\____ / \\___ /");*/
+            Console.WriteLine("____ ____    ____ _  _ ____ _  _    ___  ____");
+            Console.WriteLine("| __ / |  | __[__ | __ | | __ | |\\/| __ | __] |  |");
+            Console.WriteLine("|  \\ | __ | ___] |  | |  | |  |    | __] | __ |");
             //Console.WriteLine("Ro-Sham-Bo");
             Console.WriteLine("Press any key to continue");
+
             char input = '\0';
             Console.ReadLine();
             while(input != '3') {
@@ -114,7 +120,9 @@ namespace RoShamBo
                 string output = "";
                 if (PlayerString.Equals(comp)) {
                     output = String.Format("Tie: {0} and {1}", PlayerString, comp);
-                    ties++;
+                    ro_sham_bo.Properties.Settings.Default.Ties++;
+                    ro_sham_bo.Properties.Settings.Default.Save();
+                    //ties++;
                 } else {
                     string both = PlayerString + comp;
 
@@ -123,10 +131,14 @@ namespace RoShamBo
                         case "PaperRock":
                         case "ScissorsPaper":
                             output = String.Format("You win: {0} beats {1}", PlayerString, comp);
+                            ro_sham_bo.Properties.Settings.Default.Wins++;
+                            ro_sham_bo.Properties.Settings.Default.Save();
                             playerWins++;
                             break;
                         default:
                             output = String.Format("CPU wins: {0} beats {1}", comp, PlayerString);
+                            ro_sham_bo.Properties.Settings.Default.Ties++;
+                            ro_sham_bo.Properties.Settings.Default.Save();
                             cpuWins++;
                             break;
                     }
@@ -138,13 +150,13 @@ namespace RoShamBo
         }
 
         static void Statistics() {
-            double total = playerWins + cpuWins + ties;
+            double total = ro_sham_bo.Properties.Settings.Default.Wins + ro_sham_bo.Properties.Settings.Default.Losses + ro_sham_bo.Properties.Settings.Default.Ties;
             Console.Clear();
             if (total <= 0) {
                 Console.WriteLine("No games played. Check back after you have played somoe games.\r\nPress any key to continue");
             } else {
-                double winPercentage = ((playerWins) / (total)) * 100;
-                Console.WriteLine(string.Format("Games Won:\t{0}\r\nGames Lost:\t{1}\r\nGames Tied:\t{2}\r\nWin Percentage:\t{3}%\r\nPress any key to continue", playerWins, cpuWins, ties, winPercentage));
+                double winPercentage = ((ro_sham_bo.Properties.Settings.Default.Wins) / (total)) * 100;
+                Console.WriteLine(string.Format("Games Won:\t{0}\r\nGames Lost:\t{1}\r\nGames Tied:\t{2}\r\nWin Percentage:\t{3}%\r\nPress any key to continue", ro_sham_bo.Properties.Settings.Default.Wins, ro_sham_bo.Properties.Settings.Default.Losses, ro_sham_bo.Properties.Settings.Default.Ties, winPercentage));
             }
             Console.ReadLine();
         }
