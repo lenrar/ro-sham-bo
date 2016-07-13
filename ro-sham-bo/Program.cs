@@ -22,9 +22,6 @@ namespace RoShamBo
             Console.WriteLine("|    // _ \\______|`--. \\ '_ \\ / _` | '_ ` _ \\______| ___ \\/ _ \\ ");
             Console.WriteLine("| |\\ \\ (_) |     /\\__ / / | | | (_ | | | | | | |     | | _ / / (_) |");
             Console.WriteLine("\\_ | \\_\\___ /      \\____ /| _ | | _ |\\__, _ | _ | | _ | | _ |     \\____ / \\___ /");*/
-            Console.WriteLine("____ ____    ____ _  _ ____ _  _    ___  ____");
-            Console.WriteLine("| __ / |  | __[__ | __ | | __ | |\\/| __ | __] |  |");
-            Console.WriteLine("|  \\ | __ | ___] |  | |  | |  |    | __] | __ |");
             //Console.WriteLine("Ro-Sham-Bo");
             Console.WriteLine("Press any key to continue");
 
