@@ -25,17 +25,20 @@ namespace RoShamBo
             //Console.WriteLine("Ro-Sham-Bo");
             Console.WriteLine("Press any key to continue");
 
-            char input = '\0';
-            Console.ReadLine();
-            while(input != '3') {
+            ConsoleKey input = ConsoleKey.NoName;
+            Console.ReadKey();
+            while(input != ConsoleKey.NumPad3 && input != ConsoleKey.D3) {
                 Console.Clear();
                 Console.WriteLine("Main Menu:\r\n1:\tNew Game\r\n2:\tStatistics\r\n3:\tQuit");
-                input = Console.ReadLine()[0];
+                
+                input = Console.ReadKey().Key;
                 switch (input) {
-                    case '1':
+                    case ConsoleKey.NumPad1:
+                    case ConsoleKey.D1:
                         GameLoop();
                         break;
-                    case '2':
+                    case ConsoleKey.NumPad2:
+                    case ConsoleKey.D2:
                         Statistics();
                         break;
                     default:
@@ -73,29 +76,31 @@ namespace RoShamBo
                     break;
 
             }*/
-            char player = '\0';
+            ConsoleKey player = ConsoleKey.NoName;
             string PlayerString = "";
-            while (player != 'b') {
+            while (player != ConsoleKey.B) {
+                Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Clear();
                 Console.WriteLine("Enter (R)ock (P)aper (S)cissors or (B)ack");
-                player = Console.ReadLine()[0];
-                player = Char.ToLower(player);
+                player = Console.ReadKey().Key;
+                Console.WriteLine();
                 switch (player) {
-                    case 'r':
+                    case ConsoleKey.R:
                         PlayerString = "Rock";
                         break;
-                    case 'p':
+                    case ConsoleKey.P:
                         PlayerString = "Paper";
                         break;
-                    case 's':
+                    case ConsoleKey.S:
                         PlayerString = "Scissors";
                         break;
-                    case 'b':
+                    case ConsoleKey.B:
                         return; 
                     default:
-                        throw new ArgumentException("Invalid input: " + player);
-                        break;
-
+                        Console.WriteLine("Invalid character, press any key to continue");
+                        Console.ReadKey();
+                        continue;
+                        // throw new ArgumentException("Invalid input: " + player);
                 }
                 int ai = rand.Next();
                 ai = ai % 3;
@@ -116,6 +121,7 @@ namespace RoShamBo
                 }
                 string output = "";
                 if (PlayerString.Equals(comp)) {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     output = String.Format("Tie: {0} and {1}", PlayerString, comp);
                     ro_sham_bo.Properties.Settings.Default.Ties++;
                     ro_sham_bo.Properties.Settings.Default.Save();
@@ -127,12 +133,14 @@ namespace RoShamBo
                         case "RockScissors":
                         case "PaperRock":
                         case "ScissorsPaper":
+                            Console.ForegroundColor = ConsoleColor.Green;
                             output = String.Format("You win: {0} beats {1}", PlayerString, comp);
                             ro_sham_bo.Properties.Settings.Default.Wins++;
                             ro_sham_bo.Properties.Settings.Default.Save();
                             playerWins++;
                             break;
                         default:
+                            Console.ForegroundColor = ConsoleColor.Red;
                             output = String.Format("CPU wins: {0} beats {1}", comp, PlayerString);
                             ro_sham_bo.Properties.Settings.Default.Ties++;
                             ro_sham_bo.Properties.Settings.Default.Save();
@@ -141,7 +149,7 @@ namespace RoShamBo
                     }
                 }
                 Console.WriteLine(output + "\r\nPress any key to continue");
-                Console.ReadLine();
+                Console.ReadKey();
 
             }
         }
@@ -155,7 +163,7 @@ namespace RoShamBo
                 double winPercentage = ((ro_sham_bo.Properties.Settings.Default.Wins) / (total)) * 100;
                 Console.WriteLine(string.Format("Games Won:\t{0}\r\nGames Lost:\t{1}\r\nGames Tied:\t{2}\r\nWin Percentage:\t{3}%\r\nPress any key to continue", ro_sham_bo.Properties.Settings.Default.Wins, ro_sham_bo.Properties.Settings.Default.Losses, ro_sham_bo.Properties.Settings.Default.Ties, winPercentage));
             }
-            Console.ReadLine();
+            Console.ReadKey();
         }
 
         static void Save(int pos) {
