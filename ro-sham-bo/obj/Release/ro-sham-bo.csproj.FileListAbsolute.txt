@@ -1,5 +1,0 @@
-C:\Projects\RPS\ro-sham-bo\ro-sham-bo\bin\Release\ro-sham-bo.exe.config
-C:\Projects\RPS\ro-sham-bo\ro-sham-bo\bin\Release\ro-sham-bo.exe
-C:\Projects\RPS\ro-sham-bo\ro-sham-bo\bin\Release\ro-sham-bo.pdb
-C:\Projects\RPS\ro-sham-bo\ro-sham-bo\obj\Release\ro-sham-bo.exe
-C:\Projects\RPS\ro-sham-bo\ro-sham-bo\obj\Release\ro-sham-bo.pdb
