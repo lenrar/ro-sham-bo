@@ -11,9 +11,9 @@ namespace RoShamBo
 {
     class Program
     {
-        static double Wins = 0;
-        static double Losses = 0;
-        static double Ties = 0;
+        private static double Wins = 0;
+        private static double Losses = 0;
+        private static double Ties = 0;
 
         //Differentiates between left and right hands, for printing icons.
         private static int LeftHand = 3;
@@ -31,12 +31,13 @@ namespace RoShamBo
 
             ConsoleKey input = ConsoleKey.NoName;
             Console.ReadKey();
-            while (input != ConsoleKey.NumPad3 && input != ConsoleKey.D3)
+            bool running = true;
+            while (running)
             {
                 Console.Clear();
-                Console.WriteLine("Main Menu:\r\n1:\tNew Game\r\n2:\tStatistics\r\n3:\tQuit");
+                Console.WriteLine("Main Menu:\r\n1:\tNew Game\r\n2:\tStatistics\r\n3:\tReset\r\n4:\tQuit");
 
-                input = Console.ReadKey().Key;
+                input = Console.ReadKey(true).Key;
                 switch (input)
                 {
                     case ConsoleKey.NumPad1:
@@ -46,6 +47,14 @@ namespace RoShamBo
                     case ConsoleKey.NumPad2:
                     case ConsoleKey.D2:
                         Statistics();
+                        break;
+                    case ConsoleKey.NumPad3:
+                    case ConsoleKey.D3:
+                        ro_sham_bo.Properties.Settings.Default.Reset();
+                        break;
+                    case ConsoleKey.NumPad4:
+                    case ConsoleKey.D4:
+                        running = false;
                         break;
                     default:
                         Console.WriteLine("Unrecognized Command.");
@@ -84,7 +93,8 @@ namespace RoShamBo
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Clear();
                 Console.WriteLine("Enter (R)ock (P)aper (S)cissors or (B)ack");
-                player = Console.ReadKey(true).Key;
+                if(player.Equals(ConsoleKey.NoName))
+                    player = Console.ReadKey(true).Key;
                 switch (player)
                 {
                     case ConsoleKey.R:
@@ -129,7 +139,6 @@ namespace RoShamBo
                     output = String.Format("Tie: {0} and {1}", PlayerString, comp);
                     ro_sham_bo.Properties.Settings.Default.Ties++;
                     ro_sham_bo.Properties.Settings.Default.Save();
-                    //ties++;
                 }
                 else
                 {
@@ -149,7 +158,7 @@ namespace RoShamBo
                         default:
                             Console.ForegroundColor = ConsoleColor.Red;
                             output = String.Format("CPU wins: {0} beats {1}", comp, PlayerString);
-                            ro_sham_bo.Properties.Settings.Default.Ties++;
+                            ro_sham_bo.Properties.Settings.Default.Losses++;
                             ro_sham_bo.Properties.Settings.Default.Save();
                             Losses++;
                             break;
@@ -157,7 +166,7 @@ namespace RoShamBo
                 }
                 Console.WriteLine(Results(PlayerString, comp));
                 Console.WriteLine(output + "\r\nPress any key to continue");
-                Console.ReadKey();
+                player = Console.ReadKey(true).Key;
 
             }
         }
@@ -198,7 +207,6 @@ namespace RoShamBo
             for (int i = 0; i < Math.Min(Icons[RightIndex].Count, Icons[LeftIndex].Count); i++)
             {
                 ret += String.Format("{0,-20}{1,20}\r\n", Icons[RightIndex][i], Icons[LeftIndex][i]);
-                //Icons[RightIndex][i] + "\t\t\t" + Icons[LeftIndex][i] + "\r\n";
             }
             return ret;
         }
@@ -216,7 +224,7 @@ namespace RoShamBo
                 double winPercentage = ((ro_sham_bo.Properties.Settings.Default.Wins) / (total)) * 100;
                 Console.WriteLine(string.Format("Games Won:\t{0}\r\nGames Lost:\t{1}\r\nGames Tied:\t{2}\r\nWin Percentage:\t{3}%\r\nPress any key to continue", ro_sham_bo.Properties.Settings.Default.Wins, ro_sham_bo.Properties.Settings.Default.Losses, ro_sham_bo.Properties.Settings.Default.Ties, winPercentage));
             }
-            Console.ReadKey();
+            Console.ReadKey(true);
         }
 
         static void Save(int pos)
