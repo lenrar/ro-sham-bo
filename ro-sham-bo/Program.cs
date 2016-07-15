@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace RoShamBo
 {
     class Program
     {
+        private const int NewGame = 0;
+        private const int Stats = 1;
+        private const int Reset = 2;
+        private const int Quit = 3;
+
+        private static string[] MenuItems = new string[4] { "New Game", "Statistics", "Reset", "Quit" };
+
         private static double Wins = 0;
         private static double Losses = 0;
         private static double Ties = 0;
@@ -24,44 +27,44 @@ namespace RoShamBo
 
         static void Main(string[] args)
         {
-            Setup();
 
+            Setup();
             Console.WriteLine("Welcome to Ro-Sham-Bo");
             Console.WriteLine("Press any key to continue");
+            Console.ReadKey(true);
+            HandleMenu(Menu(MenuItems));
 
-            ConsoleKey input = ConsoleKey.NoName;
-            Console.ReadKey();
-            bool running = true;
-            while (running)
-            {
-                Console.Clear();
-                Console.WriteLine("Main Menu:\r\n1:\tNew Game\r\n2:\tStatistics\r\n3:\tReset\r\n4:\tQuit");
+            //bool running = true;
+            //while (running)
+            //{
+            //    Console.Clear();
+            //    Console.WriteLine("Main Menu:\r\n1:\tNew Game\r\n2:\tStatistics\r\n3:\tReset\r\n4:\tQuit");
 
-                input = Console.ReadKey(true).Key;
-                switch (input)
-                {
-                    case ConsoleKey.NumPad1:
-                    case ConsoleKey.D1:
-                        GameLoop();
-                        break;
-                    case ConsoleKey.NumPad2:
-                    case ConsoleKey.D2:
-                        Statistics();
-                        break;
-                    case ConsoleKey.NumPad3:
-                    case ConsoleKey.D3:
-                        ro_sham_bo.Properties.Settings.Default.Reset();
-                        break;
-                    case ConsoleKey.NumPad4:
-                    case ConsoleKey.D4:
-                        running = false;
-                        break;
-                    default:
-                        Console.WriteLine("Unrecognized Command.");
-                        break;
-                }
+            //    input = Console.ReadKey(true).Key;
+            //    switch (input)
+            //    {
+            //        case ConsoleKey.NumPad1:
+            //        case ConsoleKey.D1:
+            //            GameLoop();
+            //            break;
+            //        case ConsoleKey.NumPad2:
+            //        case ConsoleKey.D2:
+            //            Statistics();
+            //            break;
+            //        case ConsoleKey.NumPad3:
+            //        case ConsoleKey.D3:
+            //            ro_sham_bo.Properties.Settings.Default.Reset();
+            //            break;
+            //        case ConsoleKey.NumPad4:
+            //        case ConsoleKey.D4:
+            //            running = false;
+            //            break;
+            //        default:
+            //            Console.WriteLine("Unrecognized Command.");
+            //            break;
+            //    }
 
-            }
+            //}
 
 
         }
@@ -79,6 +82,115 @@ namespace RoShamBo
                     continue;
                 }
                 Icons[i].Add(line);
+            }
+        }
+
+        static int Menu(string[] inArray)
+        {
+            Console.Clear();
+            Console.WriteLine("Main Menu: ");
+            bool loopComplete = false;
+            int topOffset = Console.CursorTop;
+            int bottomOffset = 0;
+            int selectedItem = 0;
+            ConsoleKeyInfo kb;
+
+            Console.CursorVisible = false;
+
+            //this will resise the console if the amount of elements in the list are too big
+            if ((inArray.Length) > Console.WindowHeight)
+            {
+                throw new Exception("Too many items in the array to display");
+            }
+
+            /**
+             * Drawing phase
+             * */
+            while (!loopComplete)
+            {//This for loop prints the array out
+                for (int i = 0; i < inArray.Length; i++)
+                {
+                    if (i == selectedItem)
+                    {//This section is what highlights the selected item
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.WriteLine("-" + inArray[i]);
+                        Console.ResetColor();
+                    }
+                    else
+                    {//this section is what prints unselected items
+                        Console.WriteLine("-" + inArray[i]);
+                    }
+                }
+
+                bottomOffset = Console.CursorTop;
+
+                /*
+                 * User input phase
+                 * */
+
+                kb = Console.ReadKey(true); //read the keyboard
+
+                switch (kb.Key)
+                { //react to input
+                    case ConsoleKey.UpArrow:
+                        if (selectedItem > 0)
+                        {
+                            selectedItem--;
+                        }
+                        else
+                        {
+                            selectedItem = (inArray.Length - 1);
+                        }
+                        break;
+
+                    case ConsoleKey.DownArrow:
+                        if (selectedItem < (inArray.Length - 1))
+                        {
+                            selectedItem++;
+                        }
+                        else
+                        {
+                            selectedItem = 0;
+                        }
+                        break;
+
+                    case ConsoleKey.Enter:
+                        loopComplete = true;
+                        break;
+                }
+                //Reset the cursor to the top of the screen
+                Console.SetCursorPosition(0, topOffset);
+            }
+            //set the cursor just after the menu so that the program can continue after the menu
+            Console.SetCursorPosition(0, bottomOffset);
+
+            Console.CursorVisible = true;
+            return selectedItem;
+        }
+
+        static void HandleMenu(int MenuItem)
+        {
+            switch (MenuItem)
+            {
+                case NewGame:
+                    GameLoop();
+                    HandleMenu(Menu(MenuItems));
+                    break;
+                case Stats:
+                    Statistics();
+                    HandleMenu(Menu(MenuItems));
+                    break;
+                case Reset:
+                    ro_sham_bo.Properties.Settings.Default.Reset();
+                    HandleMenu(Menu(MenuItems));
+                    break;
+                case Quit:
+                    Environment.Exit(0);
+                    break;
+                default:
+                    Environment.Exit(1);
+                    break;
             }
         }
 
@@ -111,7 +223,7 @@ namespace RoShamBo
                     default:
                         Console.WriteLine("Invalid character, press any key to continue");
                         player = Console.ReadKey(true).Key;
-                        continue; 
+                        continue;
                         // throw new ArgumentException("Invalid input: " + player);
                 }
                 int ai = rand.Next();
@@ -169,7 +281,7 @@ namespace RoShamBo
                 Console.ForegroundColor = ConsoleColor.Gray;
                 player = Console.ReadKey(true).Key;
 
-            } 
+            }
         }
 
         static string Results(string Right, string Left)
