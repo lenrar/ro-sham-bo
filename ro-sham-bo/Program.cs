@@ -93,7 +93,6 @@ namespace RoShamBo
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Clear();
                 Console.WriteLine("Enter (R)ock (P)aper (S)cissors or (B)ack");
-                player = Console.ReadKey(true).Key;
                 if (player.Equals(ConsoleKey.NoName))
                     player = Console.ReadKey(true).Key;
                 switch (player)
@@ -111,8 +110,8 @@ namespace RoShamBo
                         return;
                     default:
                         Console.WriteLine("Invalid character, press any key to continue");
-                        Console.ReadKey();
-                        break; 
+                        player = Console.ReadKey(true).Key;
+                        continue; 
                         // throw new ArgumentException("Invalid input: " + player);
                 }
                 int ai = rand.Next();
@@ -167,7 +166,8 @@ namespace RoShamBo
                 }
                 Console.WriteLine(Results(PlayerString, comp));
                 Console.WriteLine(output + "\r\nPress any key to continue");
-                Console.ReadKey(true);
+                Console.ForegroundColor = ConsoleColor.Gray;
+                player = Console.ReadKey(true).Key;
 
             } 
         }
