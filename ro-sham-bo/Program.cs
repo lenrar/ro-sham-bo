@@ -17,6 +17,7 @@ namespace RoShamBo
         private static double Wins = 0;
         private static double Losses = 0;
         private static double Ties = 0;
+        private static double WinStreak = 0;
 
         //Differentiates between left and right hands, for printing icons.
         private static int LeftHand = 3;
@@ -70,6 +71,8 @@ namespace RoShamBo
         }
         private static void Setup()
         {
+            Console.SetWindowSize(42, 15);
+            Console.SetBufferSize(42, 15);
             StreamReader IconReader = new StreamReader(IconPath);
             int i = 0;
             while (!IconReader.EndOfStream)
@@ -205,7 +208,7 @@ namespace RoShamBo
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Clear();
                 Console.WriteLine("Enter (R)ock (P)aper (S)cissors or (B)ack");
-                player = Console.ReadKey(true).Key;
+                //player = Console.ReadKey(true).Key;
                 if (player.Equals(ConsoleKey.NoName))
                     player = Console.ReadKey(true).Key;
                 switch (player)
@@ -222,7 +225,11 @@ namespace RoShamBo
                     case ConsoleKey.B:
                         return;
                     default:
-                        Console.WriteLine("Invalid character, press any key to continue");
+                        Console.WriteLine();
+                        Console.SetCursorPosition((Console.WindowWidth - "Invalid Character".Length) / 2, Console.CursorTop);
+                        Console.WriteLine("Invalid Character");
+                        Console.SetCursorPosition((Console.WindowWidth - "Press any key to continue".Length) / 2, Console.CursorTop);
+                        Console.WriteLine("Press any key to continue");
                         player = Console.ReadKey(true).Key;
                         continue;
                         // throw new ArgumentException("Invalid input: " + player);
@@ -263,24 +270,29 @@ namespace RoShamBo
                         case "PaperRock":
                         case "ScissorsPaper":
                             Console.ForegroundColor = ConsoleColor.Green;
-                            output = String.Format("You win: {0} beats {1}", PlayerString, comp);
+                            output = String.Format("You Win: {0} beats {1}", PlayerString, comp);
                             ro_sham_bo.Properties.Settings.Default.Wins++;
-                            ro_sham_bo.Properties.Settings.Default.Save();
-                            Wins++;
+                            WinStreak++;
+                            if (ro_sham_bo.Properties.Settings.Default.WinStreak < WinStreak)
+                                ro_sham_bo.Properties.Settings.Default.WinStreak = WinStreak;
+                            ro_sham_bo.Properties.Settings.Default.Save();                        
                             break;
                         default:
                             Console.ForegroundColor = ConsoleColor.Red;
-                            output = String.Format("CPU wins: {0} beats {1}", comp, PlayerString);
+                            output = String.Format("CPU Win: {0} beats {1}", comp, PlayerString);
                             ro_sham_bo.Properties.Settings.Default.Losses++;
                             ro_sham_bo.Properties.Settings.Default.Save();
-                            Losses++;
+                            WinStreak = 0;
                             break;
                     }
                 }
                 Console.WriteLine(Results(PlayerString, comp));
-                Console.WriteLine(output + "\r\nPress any key to continue");
+                Console.SetCursorPosition((Console.WindowWidth - output.Length) / 2, Console.CursorTop);
+                Console.WriteLine(output);
+                Console.SetCursorPosition((Console.WindowWidth - ("Highscore: " + WinStreak).Length) / 2, Console.CursorTop);
+                Console.WriteLine("Highscore: " + WinStreak);
                 Console.ForegroundColor = ConsoleColor.Gray;
-                Console.ReadKey(true);
+                player = Console.ReadKey(true).Key;
 
             }
         }
@@ -320,7 +332,7 @@ namespace RoShamBo
             // Not very robust atm, doesn't support different sized icons.
             for (int i = 0; i < Math.Min(Icons[RightIndex].Count, Icons[LeftIndex].Count); i++)
             {
-                ret += String.Format("{0,-20}{1,20}\r\n", Icons[RightIndex][i], Icons[LeftIndex][i]);
+                ret += String.Format(" {0,-20}{1,20}\r\n", Icons[RightIndex][i], Icons[LeftIndex][i]);
             }
             return ret;
         }
@@ -331,19 +343,20 @@ namespace RoShamBo
             Console.Clear();
             if (total <= 0)
             {
-                Console.WriteLine("No games played. Check back after you have played somoe games.\r\nPress any key to continue");
+                Console.WriteLine("No games played. \r\nCheck back after you have played some games.\r\nPress any key to continue");
             }
             else
             {
                 double winPercentage = ((ro_sham_bo.Properties.Settings.Default.Wins) / (total)) * 100;
-                Console.WriteLine(string.Format("Games Won:\t{0}\r\nGames Lost:\t{1}\r\nGames Tied:\t{2}\r\nWin Percentage:\t{3}%\r\nPress any key to continue", ro_sham_bo.Properties.Settings.Default.Wins, ro_sham_bo.Properties.Settings.Default.Losses, ro_sham_bo.Properties.Settings.Default.Ties, winPercentage));
+                string statistics = string.Format("Highscore:\t{0}\r\n", ro_sham_bo.Properties.Settings.Default.WinStreak);
+                statistics += string.Format("Games Won:\t{0}\r\n", ro_sham_bo.Properties.Settings.Default.Wins);
+                statistics += string.Format("Games Lost:\t{0}\r\n", ro_sham_bo.Properties.Settings.Default.Losses);
+                statistics += string.Format("Games Tied:\t{0}\r\n", ro_sham_bo.Properties.Settings.Default.Ties);
+                statistics += string.Format("Win Percentage:\t{0}%\r\n", winPercentage);
+                statistics += string.Format("\r\nPress any key to continue\r\n");
+                Console.Write(statistics);
             }
             Console.ReadKey(true);
-        }
-
-        static void Save(int pos)
-        {
-
         }
     }
 }

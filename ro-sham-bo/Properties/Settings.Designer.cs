@@ -58,5 +58,20 @@ namespace ro_sham_bo.Properties {
                 this["Ties"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double WinStreak
+        {
+            get
+            {
+                return ((double)(this["WinStreak"]));
+            }
+            set
+            {
+                this["WinStreak"] = value;
+            }
+        }
     }
 }
