@@ -2,3 +2,8 @@ ro-sham-bo/bin
 ro-sham-bo/obj
 .gitignore.
 .vs
+<<<<<<< HEAD
+=======
+one.txt
+two.txt
+>>>>>>> refs/remotes/origin/master
