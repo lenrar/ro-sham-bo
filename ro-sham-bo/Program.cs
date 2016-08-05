@@ -88,7 +88,7 @@ namespace RoShamBo
             }
         }
 
-        static int Menu(string[] inArray)
+        static string Menu(string[] inArray)
         {
             Console.Clear();
             Console.WriteLine("Main Menu: ");
@@ -169,32 +169,105 @@ namespace RoShamBo
             Console.SetCursorPosition(0, bottomOffset);
 
             Console.CursorVisible = true;
-            return selectedItem;
+            return inArray[selectedItem];
         }
 
-        static void HandleMenu(int MenuItem)
+        static void HandleMenu(string MenuItem)
         {
             switch (MenuItem)
             {
-                case NewGame:
-                    GameLoop();
+                case "New Game":
+                    ChooseGameType();
                     HandleMenu(Menu(MenuItems));
                     break;
-                case Stats:
+                case "Statistics":
                     Statistics();
                     HandleMenu(Menu(MenuItems));
                     break;
-                case Reset:
+                case "Reset":
                     ro_sham_bo.Properties.Settings.Default.Reset();
                     HandleMenu(Menu(MenuItems));
                     break;
-                case Quit:
+                case "Quit":
                     Environment.Exit(0);
+                    break;
+                case "Play vs CPU":
+                    GameLoop();
+                    HandleMenu(Menu(MenuItems));
                     break;
                 default:
                     Environment.Exit(1);
                     break;
             }
+        }
+
+        static void ChooseGameType()
+        {
+            HandleMenu(Menu(new string[2] { "Play vs CPU", "Play with a friend" }));
+        }
+
+        static string CPUMove()
+        {
+            Random rand = new Random();
+            int ai = rand.Next();
+            ai = ai % 3;
+            String comp;
+            switch (ai)
+            {
+                case 0:
+                    comp = "Rock";
+                    break;
+                case 1:
+                    comp = "Paper";
+                    break;
+                case 2:
+                    comp = "Scissors";
+                    break;
+                default:
+                    comp = "Rock";
+                    break;
+            }
+            return comp;
+        }
+
+        static string FindWinner(string p1, string p2)
+        {
+            string output =  "";
+            if (p1.Equals(p2))
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                output = String.Format("Tie: {0} and {1}", p1, p2);
+                ro_sham_bo.Properties.Settings.Default.Ties++;
+                ro_sham_bo.Properties.Settings.Default.Save();
+            }
+            else
+            {
+                string both = p1 + p2;
+
+                switch (both)
+                {
+                    case "RockScissors":
+                    case "PaperRock":
+                    case "ScissorsPaper":
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        output = String.Format("You Win: {0} beats {1}", p1, p2);
+                        ro_sham_bo.Properties.Settings.Default.Wins++;
+                        WinStreak++;
+                        if (ro_sham_bo.Properties.Settings.Default.WinStreak < WinStreak)
+                            ro_sham_bo.Properties.Settings.Default.WinStreak = WinStreak;
+                        ro_sham_bo.Properties.Settings.Default.Save();
+                        break;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        output = String.Format("CPU Win: {0} beats {1}", p1, p2);
+                        ro_sham_bo.Properties.Settings.Default.Losses++;
+                        ro_sham_bo.Properties.Settings.Default.Save();
+                        WinStreak = 0;
+                        break;
+                }
+            }
+
+            return output;
         }
 
         static void GameLoop()
@@ -234,58 +307,11 @@ namespace RoShamBo
                         continue;
                         // throw new ArgumentException("Invalid input: " + player);
                 }
-                int ai = rand.Next();
-                ai = ai % 3;
-                String comp;
-                switch (ai)
-                {
-                    case 0:
-                        comp = "Rock";
-                        break;
-                    case 1:
-                        comp = "Paper";
-                        break;
-                    case 2:
-                        comp = "Scissors";
-                        break;
-                    default:
-                        comp = "Rock";
-                        break;
-                }
-                string output = "";
-                if (PlayerString.Equals(comp))
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    output = String.Format("Tie: {0} and {1}", PlayerString, comp);
-                    ro_sham_bo.Properties.Settings.Default.Ties++;
-                    ro_sham_bo.Properties.Settings.Default.Save();
-                }
-                else
-                {
-                    string both = PlayerString + comp;
+                
+                string comp = CPUMove();
 
-                    switch (both)
-                    {
-                        case "RockScissors":
-                        case "PaperRock":
-                        case "ScissorsPaper":
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            output = String.Format("You Win: {0} beats {1}", PlayerString, comp);
-                            ro_sham_bo.Properties.Settings.Default.Wins++;
-                            WinStreak++;
-                            if (ro_sham_bo.Properties.Settings.Default.WinStreak < WinStreak)
-                                ro_sham_bo.Properties.Settings.Default.WinStreak = WinStreak;
-                            ro_sham_bo.Properties.Settings.Default.Save();                        
-                            break;
-                        default:
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            output = String.Format("CPU Win: {0} beats {1}", comp, PlayerString);
-                            ro_sham_bo.Properties.Settings.Default.Losses++;
-                            ro_sham_bo.Properties.Settings.Default.Save();
-                            WinStreak = 0;
-                            break;
-                    }
-                }
+                string output = FindWinner(PlayerString, comp);
+
                 Console.WriteLine(Results(PlayerString, comp));
                 Console.SetCursorPosition((Console.WindowWidth - output.Length) / 2, Console.CursorTop);
                 Console.WriteLine(output);
